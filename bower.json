@@ -1,0 +1,23 @@
+{
+  "name": "tinto-bind",
+  "main": "tinto-bind.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/TchernoLeRigolo/tinto-bind",
+  "authors": [
+    "Tcherno <weber.jonathan@gmail.com>"
+  ],
+  "description": "A binding mechanism for Angular allowing to reduce the number of watchers",
+  "keywords": [
+    "angular",
+    "bind",
+    "watchers"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
