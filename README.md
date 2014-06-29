@@ -6,6 +6,7 @@ A binding mechanism for Angular allowing to reduce the number of watchers in spe
 #Why
 In many cases where performance is curcial, like on mobile, you will want to get the number of watchers under control. Most often, one watcher is enough to trigger multiple view changes. Let's start with an example, a simple information feed:
 
+```html
 <div ng-repeat="item in feed | orderBy: '-time'" class="feed-item">
   <div class="header">
     <a href="/user?id={{item.by.id}}" ng-bind="item.by.name"></span>
@@ -16,11 +17,12 @@ In many cases where performance is curcial, like on mobile, you will want to get
     <div class="body-text" ng-bind="item.message"></div>
   </div>
 </div>
-
+```
 We thus have 5 watchers for every item in our feed. If our feed is 100 items long, that means 500 watchers!
 
 One thing we see here is that all 5 watchers are dependent on the "item" object. Now with tinto-bind:
 
+```html
 <div ng-repeat="item in feed | orderBy: '-time'" class="feed-item" tinto-watch="item">
   <div class="header">
     <a tinto-href="/user?id={{item.by.id}}" tinto-bind="item.by.name"></span>
@@ -31,7 +33,7 @@ One thing we see here is that all 5 watchers are dependent on the "item" object.
     <div class="body-text" tinto-bind="item.message"></div>
   </div>
 </div>
-
+```
 The tintoBind directive will inspect the DOM block for "tinto" tags (tinto-bind, ...). When the watched expression changes (here 'item'), the directive will update the underlying tinto tags expressions.
 
 Doing this we've reduced the number of watchers by 5. Naturally, this means deep watching the 'item' object.
