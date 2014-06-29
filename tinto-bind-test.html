@@ -1,0 +1,43 @@
+<?doctype html?>
+<html ng-app="TintoBindTest">
+	<head>
+		<title>Test of tinto-bind</title>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
+		<script type="text/javascript" src="tinto-bind.js"></script>
+		<script type="text/javascript" src="tinto-bind-test.js"></script>
+
+		<style>
+			body {font-family: Tahoma; font-size: 10pt; margin: 20px 100px;background:#eee;}
+			button {float: right;}
+			.box {height: 200px; overflow: auto; border: 2px solid #999;background: white}
+			.feed {display: table; width: 100%;}
+			.feed > * { display: table-row;}
+			.feed > * > * {display: table-cell; padding: 5px 10px; border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;}
+		</style>
+	</head>
+
+	<body ng-controller="TintoBindTestController">
+		
+		<h1>Angular <button ng-click="countWatchers('angular')">Count watchers</button>
+		</h1>
+		<div class="box" id="angular">
+			<div class="feed">
+				<div ng-repeat="item in (feed | orderBy: 'id') track by item.id">
+					<span ng-repeat="k in item" ng-bind="k"></span>
+				</div>
+			</div>
+		</div>
+
+		<h1>Tinto <button ng-click="countWatchers('tinto')">Count watchers</button>
+		</h1>
+		<div class="box" id="tinto">
+			<div class="feed">
+				<div ng-repeat="item in (feed | orderBy: 'id') track by item.id" tinto-watch="item">
+					<span ng-repeat="k in item" tinto-bind="k"></span>
+				</div>
+			</div>
+		</div>
+
+		<div style="text-align:center"><button ng-click="doChange()">Make a change</button></div>
+	</body>
+</html>
