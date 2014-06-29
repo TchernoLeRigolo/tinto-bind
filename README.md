@@ -8,6 +8,8 @@ A binding mechanism for Angular allowing to reduce the number of watchers when:
 
 This is typically the case in read-only tables, feeds, etc...
 
+> INSTALL bower install tinto-bind --save
+
 In many cases where performance is crucial, like on mobile, you will want to get the number of watchers under control. Most often, one watcher is enough to trigger multiple view changes. Let's start with an example, a simple information feed:
 
 ```html
