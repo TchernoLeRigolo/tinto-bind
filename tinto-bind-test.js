@@ -28,17 +28,18 @@ angular.module('TintoBindTest', ['TintoBind'])
 
 		    f(root);
 
-		   alert(watchers.length);
+		   return watchers.length;
 		}
 
 		$scope.countWatchers = function(elemId) {
-			countWatchers(angular.element(document.getElementById(elemId)));
+			return countWatchers(angular.element(document.getElementById(elemId)));
 		}
 
-		$scope.doChange = function() {
-			var index = Math.round(Math.random() * $scope.feed.length);
-			for (var k in $scope.feed[index]) {
-				$scope.feed[index][k] = 'changed';
+		$scope.editItem = function(item) {
+			for (var k in item) {
+				if (k!=='id') item[k] = 'HAHA';
 			}
 		}
+
+		$scope.htmlTest = '<span class="test" style="color:red">This is html</span>';
 	})

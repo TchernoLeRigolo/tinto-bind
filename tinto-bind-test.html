@@ -3,41 +3,47 @@
 	<head>
 		<title>Test of tinto-bind</title>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-sanitize.min.js"></script>
 		<script type="text/javascript" src="tinto-bind.js"></script>
 		<script type="text/javascript" src="tinto-bind-test.js"></script>
 
 		<style>
 			body {font-family: Tahoma; font-size: 10pt; margin: 20px 100px;background:#eee;}
 			button {float: right;}
+			h1 {color: #666;}
 			.box {height: 200px; overflow: auto; border: 2px solid #999;background: white}
 			.feed {display: table; width: 100%;}
 			.feed > * { display: table-row;}
 			.feed > * > * {display: table-cell; padding: 5px 10px; border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;}
+
+			.second {background: #f5f5f5;}
+			.changed {font-weight:bold;}
 		</style>
 	</head>
 
 	<body ng-controller="TintoBindTestController">
-		
-		<h1>Angular <button ng-click="countWatchers('angular')">Count watchers</button>
-		</h1>
+		<h1>Angular</h1>
+		<p>Watchers {{countWatchers('angular')}}</p>
 		<div class="box" id="angular">
 			<div class="feed">
-				<div ng-repeat="item in (feed | orderBy: 'id') track by item.id">
+				<div ng-repeat="item in (feed | orderBy: 'id') track by item.id" ng-click="editItem(item)" ng-class="{second: $index % 2, changed: item['property1'] == 'HAHA'}">
+					<span><img style="height:20px" ng-src="https://gp3.googleusercontent.com/-O1DdovdVaJQ/AAAAAAAAAAI/AAAAAAAAABs/SHG409tnXZQ/s48-c-k-no/photo.jpg"/></span>
 					<span ng-repeat="k in item" ng-bind="k"></span>
+					<a ng-href="http://www.google.com?q={{item.id}}"><span ng-bind-html="htmlTest"></span></a>
 				</div>
 			</div>
 		</div>
 
-		<h1>Tinto <button ng-click="countWatchers('tinto')">Count watchers</button>
-		</h1>
+		<h1>Tinto</h1>
+		<p>Watchers: {{countWatchers('tinto')}}</p>
 		<div class="box" id="tinto">
 			<div class="feed">
-				<div ng-repeat="item in (feed | orderBy: 'id') track by item.id" tinto-watch="item">
+				<div ng-repeat="item in (feed | orderBy: 'id') track by item.id" ng-click="editItem(item)" tinto-watch="item" tinto-class="{second: $index % 2, changed: item['property1'] == 'HAHA'}">
+					<span><img style="height:20px" tinto-src="https://gp3.googleusercontent.com/-O1DdovdVaJQ/AAAAAAAAAAI/AAAAAAAAABs/SHG409tnXZQ/s48-c-k-no/photo.jpg"/></span>
 					<span ng-repeat="k in item" tinto-bind="k"></span>
+					<a tinto-href="http://www.google.com?q=[[item.id]]"><span tinto-bind-html="htmlTest"></span></a>
 				</div>
 			</div>
 		</div>
-
-		<div style="text-align:center"><button ng-click="doChange()">Make a change</button></div>
 	</body>
 </html>

@@ -1,58 +1,56 @@
 'use strict';
 
-/*
-TODO: 
-- allow for some options (removeToInsertLater, etc...)
-*/
+/* TODO: allow for some options (removeToInsertLater, etc...) */
 
-angular.module('TintoBind', [])
+angular.module('TintoBind', ['ngSanitize'])
 	.directive('tintoBind', function() {
 		return {
 			require: '^tintoWatch',
 			restrict: 'A',
 			scope: false,
 			link: function($scope, $element, $attrs, tintoWatch) {
-				tintoWatch.add(function(item) {
+				tintoWatch.add(function() {
 					$element.text($scope.$eval($attrs.tintoBind));
 				});
 			}
 		};
 	})
-	//TODO user ng-sanitize !!
-	.directive('tintoBindHtml', function() {
+	.directive('tintoBindHtml', function($sanitize) {
 		return {
 			require: '^tintoWatch',
 			restrict: 'A',
 			scope: false,
 			link: function($scope, $element, $attrs, tintoWatch) {
-				tintoWatch.add(function(item) {
-					$element.html($scope.$eval($attrs.tintoBindHtml));
+				tintoWatch.add(function() {
+					$element.html($sanitize($scope.$eval($attrs.tintoBindHtml)));
 				});
 			}
 		};
 	})
 
-	.directive('tintoSrc', function() {
+	.directive('tintoSrc', function($interpolate) {
 		return {
 			require: '^tintoWatch',
 			restrict: 'A',
 			scope: false,
 			link: function($scope, $element, $attrs, tintoWatch) {
-				tintoWatch.add(function(item) {
-					$element.attr('src', $scope.$eval($attrs.tintoSrc));
+				tintoWatch.add(function() {
+					var src = $attrs.tintoSrc.replace(/\[\[/g, '{{').replace(/\]\]/g, '}}');
+					$element.attr('src', $interpolate(src)($scope));
 				});
 			}
 		};
 	})
 
-	.directive('tintoHref', function() {
+	.directive('tintoHref', function($interpolate) {
 		return {
 			require: '^tintoWatch',
 			restrict: 'A',
 			scope: false,
 			link: function($scope, $element, $attrs, tintoWatch) {
-				tintoWatch.add(function(item) {
-					$element.attr('href', $scope.$eval($attrs.tintoHref));
+				tintoWatch.add(function() {
+					var href = $attrs.tintoHref.replace(/\[\[/g, '{{').replace(/\]\]/g, '}}');
+					$element.attr('href', $interpolate(href)($scope));
 				});
 			}
 		};
@@ -64,7 +62,7 @@ angular.module('TintoBind', [])
 			restrict: 'A',
 			scope: false,
 			link: function($scope, $element, $attrs, tintoWatch) {
-				tintoWatch.add(function(item) {
+				tintoWatch.add(function() {
 					$element.toggleClass('ng-hide', !$scope.$eval($attrs.tintoShow));
 				});
 			}
@@ -77,7 +75,7 @@ angular.module('TintoBind', [])
 			restrict: 'A',
 			scope: false,
 			link: function($scope, $element, $attrs, tintoWatch) {
-				tintoWatch.add(function(item) {
+				tintoWatch.add(function() {
 					$element.toggleClass('ng-hide', $scope.$eval($attrs.tintoShow));
 				});
 			}
@@ -90,8 +88,8 @@ angular.module('TintoBind', [])
 			restrict: 'A',
 			scope: false,
 			link: function($scope, $element, $attrs, tintoWatch) {
-				tintoWatch.add(function(item) {
-					var value = $scope.$eval($attrs.tintoSrc);
+				tintoWatch.add(function() {
+					var value = $scope.$eval($attrs.tintoClass);
 					for (var v in value) $element.toggleClass(v, value[v]);
 				});
 			}
@@ -124,14 +122,14 @@ angular.module('TintoBind', [])
 					appliers.push(f);
 				}
 
-				this.apply = function(item) {
+				this.apply = function() {
 					appliers.forEach(function(f) {
-						f(item);
+						f();
 					});
 				}
 			},
 			link: function($scope, $element, $attrs, ctrl) {
-				$scope.$watch($attrs.tintoWatch, function(itm) {
+				$scope.$watch($attrs.tintoWatch, function() {
 					var reinsert = removeToInsertLater($element);
 					ctrl.apply();
 					reinsert();
