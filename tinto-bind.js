@@ -121,18 +121,17 @@ angular.module('TintoBind', ['ngSanitize'])
 				}
 			},
 			link: function($scope, $element, $attrs, ctrl) {
-				if ($attrs.tintoCollection && $attrs.tintoCollection.toLowerCase() === 'true') {
-					$scope.$watchCollection('[' + $attrs.tintoWatch + ']', function() {
-						var reinsert = removeToInsertLater($element);
-						ctrl.apply();
-						reinsert();
-					}, true);
-				} else {
-					$scope.$watch($attrs.tintoWatch, function() {
+				var doWatch = function(exp) {
+					$scope.$watch(exp.trim(), function() {
 						var reinsert = ctrl.$removeToInsertLater($element);
 						ctrl.apply();
 						reinsert();
 					}, true);	
+				}
+				if ($attrs.tintoWatch.indexOf(',') > -1) {
+					$attrs.tintoWatch.split(',').forEach(doWatch);
+				} else {
+					doWatch($attrs.tintoWatch);
 				}
 			}
 		}
