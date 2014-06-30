@@ -120,7 +120,6 @@ angular.module('TintoBind', ['ngSanitize'])
 		
 		return {
 			restrict: 'A',
-			scope: false,
 			controller: 'TintoWatchController',
 			link: function($scope, $element, $attrs, ctrl) {
 				if ($attrs.tintoCollection && $attrs.tintoCollection.toLowerCase() === 'true') {
