@@ -95,39 +95,33 @@ angular.module('TintoBind', ['ngSanitize'])
 			}
 		};
 	})
+	.controller('TintoWatchController', function() {
+		var appliers = [];
+		this.add = function(f) {
+			appliers.push(f);
+		}
 
+		this.apply = function() {
+			appliers.forEach(function(f) {
+				f();
+			});
+		}
+	})
 	.directive('tintoWatch', function() {
 		/* reduce the DOM redraws by removing the element prior to updates and adding it back after*/	
 		var removeToInsertLater = function(element) {
-			var e = element[0];
-			var p = e.parentNode;
-			var n = e.nextSibling;
+			var e = element[0], p = e.parentNode, n = e.nextSibling;
 			p.removeChild(e);
 
 			return function() {
-				if (n) {
-					p.insertBefore(e, n);
-				} else {
-					p.appendChild(e);
-				}
+				n ? p.insertBefore(e, n): p.appendChild(e);
 			};
 		}
 
 		return {
 			restrict: 'A',
 			scope: false,
-			controller: function() {
-				var appliers = [];
-				this.add = function(f) {
-					appliers.push(f);
-				}
-
-				this.apply = function() {
-					appliers.forEach(function(f) {
-						f();
-					});
-				}
-			},
+			controller: 'TintoWatchController',
 			link: function($scope, $element, $attrs, ctrl) {
 				$scope.$watch($attrs.tintoWatch, function() {
 					var reinsert = removeToInsertLater($element);
@@ -136,4 +130,27 @@ angular.module('TintoBind', ['ngSanitize'])
 				}, true);
 			}
 		}
-	});
+	})
+	.directive('tintoWatchGroup', function() {
+		var removeToInsertLater = function(element) {
+			var e = element[0], p = e.parentNode, n = e.nextSibling;
+			p.removeChild(e);
+
+			return function() {
+				n ? p.insertBefore(e, n): p.appendChild(e);
+			};
+		}
+
+		return {
+			restrict: 'A',
+			scope: false,
+			controller: 'TintoWatchController',
+			link: function($scope, $element, $attrs, ctrl) {
+				$scope.$watchCollection('[' + $attrs.tintoWatch + ']', function() {
+					var reinsert = removeToInsertLater($element);
+					ctrl.apply();
+					reinsert();
+				}, true);
+			}
+		}
+	})
