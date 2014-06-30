@@ -42,6 +42,8 @@ One thing we see here is that all 5 watchers are dependent on the "item" object.
 ```
 The tinto directives will register themselves to the tintoWatch directive. When the watched expression changes (here 'item'), the directive will update the underlying tinto expressions.
 
+The tinto-bind directive can accept multiple expressions separated by a comma
+
 Doing this we've reduced the number of watchers by 5. Naturally, this means deep watching the 'item' object, so the dirty checking on the 'item' object is costlier than the 5 expressions separately. We're effectively exchanging 5 'light' watchers for one heavier one. Yet there are use-cases where this is actually beneficial: when the watched item does not change often, for example, or when you would have 1000+ watchers based on only a few root expressions.
 
 In our Tinto app, each feed item required 20+ watchers. Doing this significantly reduced the number of watchers in our feed screen. 

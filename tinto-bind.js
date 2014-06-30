@@ -123,7 +123,7 @@ angular.module('TintoBind', ['ngSanitize'])
 			link: function($scope, $element, $attrs, ctrl) {
 				var doWatch = function(exp) {
 					$scope.$watch(exp.trim(), function() {
-						var reinsert = ctrl.$removeToInsertLater($element);
+						var reinsert = removeToInsertLater($element);
 						ctrl.apply();
 						reinsert();
 					}, true);	
