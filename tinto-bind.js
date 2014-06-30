@@ -106,9 +106,10 @@ angular.module('TintoBind', ['ngSanitize'])
 				f();
 			});
 		}
-		
+	})
+	.directive('tintoWatch', function() {
 		/* reduce the DOM redraws by removing the element prior to updates and adding it back after*/	
-		this.$removeToInsertLater = function(element) {
+		var removeToInsertLater = function(element) {
 			var e = element[0], p = e.parentNode, n = e.nextSibling;
 			p.removeChild(e);
 
@@ -116,32 +117,25 @@ angular.module('TintoBind', ['ngSanitize'])
 				n ? p.insertBefore(e, n): p.appendChild(e);
 			};
 		}
-	})
-	.directive('tintoWatch', function() {
+		
 		return {
 			restrict: 'A',
 			scope: false,
 			controller: 'TintoWatchController',
 			link: function($scope, $element, $attrs, ctrl) {
-				$scope.$watch($attrs.tintoWatch, function() {
-					var reinsert = ctrl.$removeToInsertLater($element);
-					ctrl.apply();
-					reinsert();
-				}, true);
-			}
-		}
-	})
-	.directive('tintoWatchGroup', function() {
-		return {
-			restrict: 'A',
-			scope: false,
-			controller: 'TintoWatchController',
-			link: function($scope, $element, $attrs, ctrl) {
-				$scope.$watchCollection('[' + $attrs.tintoWatch + ']', function() {
-					var reinsert = ctrl.$removeToInsertLater($element);
-					ctrl.apply();
-					reinsert();
-				}, true);
+				if ($attrs.tintoCollection && $attrs.tintoCollection.toLowerCase() === 'true') {
+					$scope.$watchCollection('[' + $attrs.tintoWatch + ']', function() {
+						var reinsert = removeToInsertLater($element);
+						ctrl.apply();
+						reinsert();
+					}, true);
+				} else {
+					$scope.$watch($attrs.tintoWatch, function() {
+						var reinsert = ctrl.$removeToInsertLater($element);
+						ctrl.apply();
+						reinsert();
+					}, true);	
+				}
 			}
 		}
 	})
