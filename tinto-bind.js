@@ -95,18 +95,6 @@ angular.module('TintoBind', ['ngSanitize'])
 			}
 		};
 	})
-	.controller('TintoWatchController', function() {
-		var appliers = [];
-		this.add = function(f) {
-			appliers.push(f);
-		}
-
-		this.apply = function() {
-			appliers.forEach(function(f) {
-				f();
-			});
-		}
-	})
 	.directive('tintoWatch', function() {
 		/* reduce the DOM redraws by removing the element prior to updates and adding it back after*/	
 		var removeToInsertLater = function(element) {
@@ -120,7 +108,18 @@ angular.module('TintoBind', ['ngSanitize'])
 		
 		return {
 			restrict: 'A',
-			controller: 'TintoWatchController',
+			controller: function() {
+				var appliers = [];
+				this.add = function(f) {
+					appliers.push(f);
+				}
+		
+				this.apply = function() {
+					appliers.forEach(function(f) {
+						f();
+					});
+				}
+			},
 			link: function($scope, $element, $attrs, ctrl) {
 				if ($attrs.tintoCollection && $attrs.tintoCollection.toLowerCase() === 'true') {
 					$scope.$watchCollection('[' + $attrs.tintoWatch + ']', function() {
