@@ -35,7 +35,7 @@
 			<div class="box" id="test-table">
 				<div class="feed">
 					<div ng-repeat="item in (feed | orderBy: 'id') track by item.id" ng-click="editItem(item)" 
-						ng-class="{second: $index % 2, changed: item['property1'] == 'HAHA'}">
+						ng-class="{second: $index % 2, changed: item.changed}">
 						<span><img style="height:20px" ng-src="{{picture}}"/></span>
 						<span ng-repeat="k in item.properties" ng-bind="k"></span>
 						<a ng-href="http://www.google.com?q={{item.id}}"><span ng-bind-html="htmlTest"></span></a>
@@ -49,7 +49,7 @@
 			<div class="box" id="test-table">
 				<div class="feed">
 					<div ng-repeat="item in (feed | orderBy: 'id') track by item.id" ng-click="editItem(item)" tinto-watch="item.when"
-						tinto-class="{second: $index % 2, changed: item['property1'] == 'HAHA'}">
+						tinto-class="{second: $index % 2, changed: item.changed}">
 						<span><img style="height:20px" tinto-src="[[picture]]"/></span>
 						<span ng-repeat="k in item.properties" tinto-bind="k"></span>
 						<a tinto-href="http://www.google.com?q=[[item.id]]"><span tinto-bind-html="htmlTest"></span></a>
