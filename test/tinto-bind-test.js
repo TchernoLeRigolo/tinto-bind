@@ -57,6 +57,7 @@ angular.module('TintoBindTest', ['TintoBind'])
 			for (var k in item.properties) {
 				item.properties[k] = ++item.properties[k];
 			}
+			item.changed = true;
 			item.when = new Date();
 		}
 
